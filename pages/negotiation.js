@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { db } from "../../firebase"; // Adjust path as needed
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
-import Header from "../components/Header";
-import { useRouter } from 'next/router'; // Import the router
+import Header from "../../components/Header"; // Adjust path
+import { useRouter } from 'next/router';
 
 export default function Negotiation() {
   const [negotiations, setNegotiations] = useState([]);
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchNegotiations() {
@@ -20,21 +20,22 @@ export default function Negotiation() {
   const startNegotiation = async () => {
     try {
       const docRef = await addDoc(collection(db, "negotiations"), {
-        title: "New Business Deal",
+        title: "New Business Deal", // You can make this dynamic later
         status: "Pending",
-        messages: [],
+        messages: [], // Initialize with an empty array of messages
         created_at: new Date(),
       });
-      router.push(`/negotiation/${docRef.id}`); // Redirect to new negotiation page
+      router.push(`/negotiation/${docRef.id}`);
     } catch (error) {
       console.error("Error starting negotiation:", error);
+      // Handle the error (e.g., display an error message to the user)
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-green-900 text-white flex flex-col"> {/* flex flex-col added */}
+    <div className="min-h-screen bg-gradient-to-b from-black to-green-900 text-white flex flex-col">
       <Header />
-      <div className="flex-grow"> {/* flex-grow added */}
+      <div className="flex-grow">
         <div className="max-w-6xl mx-auto py-12 px-6">
           <h1 className="text-4xl font-bold text-center mb-8">Negotiations</h1>
           <p className="text-center text-gray-300 mb-10">Manage your business deals and discussions.</p>
