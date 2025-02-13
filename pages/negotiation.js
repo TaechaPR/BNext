@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../../firebase"; // Adjust path as needed
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
-import Header from "../../components/Header"; // Adjust path
+import Header from "../components/Header"; // Adjust path
 import { useRouter } from 'next/router';
 
 export default function Negotiation() {

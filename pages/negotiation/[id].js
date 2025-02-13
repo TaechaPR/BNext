@@ -1,11 +1,11 @@
-// pages/negotiation/[id].js
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router';
-import { db } from "../../firebase"; // Adjust path as needed
+import { db } from "../../firebase"; // Correct path: Up two levels, then firebase.js
 import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
-import Header from "../../components/Header"; // Adjust path as needed
-import { useAuth } from '../../context/AuthContext'; // Adjust path as needed
+import Header from "../../components/Header"; // Correct path: Up two levels, then components/Header.js
+import { useAuth } from '../../../context/AuthContext'; // Correct path: Up three levels, then context/AuthContext.js
 
+// ... (rest of the code)
 export default function NegotiationDetails() {
   const router = useRouter();
   const { id } = router.query;
