@@ -4,11 +4,13 @@ import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
 import Header from "../components/Header";
+import { useRouter } from 'next/router';
 
 export default function Register() {
   const [form, setForm] = useState({ email: "", password: "", name: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -36,12 +38,12 @@ export default function Register() {
       });
 
       alert("Account created successfully!");
-      // Optionally redirect after successful registration:
-      // router.push('/login'); // If you're using next/router
+      router.push('/login'); // Redirect to login
     } catch (error) {
       setError(error.message);
+    } finally { // Ensure loading is always set to false
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -63,6 +65,7 @@ export default function Register() {
               value={form.name}
               onChange={handleChange}
               className="w-full p-3 bg-gray-800 text-white rounded"
+              required // Added required attribute
             />
             <input
               type="email"
@@ -71,6 +74,7 @@ export default function Register() {
               value={form.email}
               onChange={handleChange}
               className="w-full p-3 bg-gray-800 text-white rounded"
+              required // Added required attribute
             />
             <input
               type="password"
@@ -79,6 +83,8 @@ export default function Register() {
               value={form.password}
               onChange={handleChange}
               className="w-full p-3 bg-gray-800 text-white rounded"
+              required // Added required attribute
+              minLength={6} // Example: Minimum password length
             />
             <motion.button
               type="submit"
