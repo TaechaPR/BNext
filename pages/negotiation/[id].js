@@ -1,9 +1,11 @@
 // pages/negotiation/[id].js
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router';
-import { db } from "../firebase"; // Adjust path as needed
+import { db } from "../../firebase"; // Correct path: Up two levels
 import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
-import Header from "../components/Header"; // Adjust path as needed
+import Header from "../../components/Header"; // Correct path: Up two levels
+
+// ... (rest of the code - no other changes needed)
 
 export default function NegotiationDetails() {
   const router = useRouter();
