@@ -1,8 +1,9 @@
+// pages/negotiation/[id].js
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router';
-import { db } from "../../firebase";
-import { doc, onSnapshot, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
-import Header from "../../components/Header";
+import { db } from "../../firebase"; // Correct path: Up two levels
+import { doc, getDoc, onSnapshot, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+import Header from "../../components/Header"; // Correct path: Up two levels
 
 export default function NegotiationDetails() {
   const router = useRouter();
@@ -12,23 +13,47 @@ export default function NegotiationDetails() {
   const [messageText, setMessageText] = useState("");
   const messageListRef = useRef(null);
 
-  const staticSenderId = "guestUser"; // Replace with real user authentication
+  const staticSenderId = "guestUser"; // Replace with real user ID logic later
 
   useEffect(() => {
-    if (id) {
-      const docRef = doc(db, "negotiations", id);
-      const unsubscribe = onSnapshot(docRef, (docSnap) => {
-        if (docSnap.exists()) {
-          setNegotiation(docSnap.data());
-        } else {
-          console.error("No such document!");
-          router.push('/negotiation');
-        }
-        setLoading(false);
-      });
+    let unsubscribe; // To store the unsubscribe function
 
-      return () => unsubscribe(); // Cleanup listener on unmount
+    async function fetchInitialData() {
+      if (id) {
+        const docRef = doc(db, "negotiations", id);
+        try {
+          const docSnap = await getDoc(docRef); // Fetch initial data
+          if (docSnap.exists()) {
+            setNegotiation(docSnap.data());
+          } else {
+            console.error("No such document!");
+            router.push('/negotiation');
+            return; // Stop further execution
+          }
+
+          // Now set up onSnapshot *after* getting initial data
+          unsubscribe = onSnapshot(docRef, (updatedDocSnap) => {
+            if (updatedDocSnap.exists()) {
+              setNegotiation(updatedDocSnap.data());
+            }
+          });
+
+        } catch (error) {
+          console.error("Error fetching negotiation:", error);
+          setLoading(false); // Make sure to set loading to false in case of error
+        } finally {
+          setLoading(false); // Set loading to false after data is fetched
+        }
+      }
     }
+
+    fetchInitialData();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe(); // Clean up listener on unmount
+      }
+    };
   }, [id, router]);
 
   useEffect(() => {
