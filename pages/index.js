@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
-import '../styles/globals.css';
 import Header from "../components/Header";
 
 export default function Home() {
