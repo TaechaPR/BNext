@@ -52,7 +52,7 @@ export default function Header() {
               whileTap={{ scale: 0.95 }}
               className="text-gray-300 hover:text-green-500 transition-all cursor-pointer"
             >
-              Register
+              About Us
             </motion.span>
           </Link>
         </nav>
