@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { db } from "../../firebase";
+import { db } from "../firebase";
 import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
-import Header from "../../components/Header";
+import Header from "../components/Header";
 
 export default function NegotiationList() {
   const [negotiations, setNegotiations] = useState([]);
