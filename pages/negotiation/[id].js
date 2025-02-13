@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase'; // Import your Firebase config
-import Header from '../components/Header'; 
+import { db } from '../../firebase'; // Import your Firebase config
+import Header from '../../components/Header'; 
 
 const NegotiationDetails = () => {
   const router = useRouter();
