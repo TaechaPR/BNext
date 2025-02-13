@@ -6,7 +6,7 @@ export default function Header() {
     <header className="bg-black bg-opacity-70 backdrop-blur-md fixed w-full z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link href="/">
+        <Link href="/" className="no-underline">
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -19,45 +19,45 @@ export default function Header() {
 
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-8">
-          <Link href="/marketplace">
-            <motion.button
+          <Link href="/marketplace" className="no-underline">
+            <motion.span
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="text-gray-300 hover:text-green-500 transition-all"
+              className="text-gray-300 hover:text-green-500 transition-all cursor-pointer"
             >
               Marketplace
-            </motion.button>
+            </motion.span>
           </Link>
-          <Link href="/education">
-            <motion.button
+          <Link href="/education" className="no-underline">
+            <motion.span
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="text-gray-300 hover:text-green-500 transition-all"
+              className="text-gray-300 hover:text-green-500 transition-all cursor-pointer"
             >
               Education
-            </motion.button>
+            </motion.span>
           </Link>
-          <Link href="/negotiation">
-            <motion.button
+          <Link href="/negotiation" className="no-underline">
+            <motion.span
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="text-gray-300 hover:text-green-500 transition-all"
+              className="text-gray-300 hover:text-green-500 transition-all cursor-pointer"
             >
               Negotiation
-            </motion.button>
+            </motion.span>
           </Link>
-          <Link href="/register">
-            <motion.button
+          <Link href="/register" className="no-underline">
+            <motion.span
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="text-gray-300 hover:text-green-500 transition-all"
+              className="text-gray-300 hover:text-green-500 transition-all cursor-pointer"
             >
               Register
-            </motion.button>
+            </motion.span>
           </Link>
         </nav>
 
-        {/* Mobile Menu Button (Optional) */}
+        {/* Mobile Menu Button */}
         <button className="md:hidden text-gray-300 hover:text-green-500 focus:outline-none">
           <svg
             className="w-6 h-6"
