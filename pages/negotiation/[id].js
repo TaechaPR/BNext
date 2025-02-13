@@ -1,8 +1,10 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { db } from "../../firebase"; // Correct path: Up two levels
-import { doc, getDoc, onSnapshot } from "firebase/firestore"; // Import onSnapshot
-import Header from "../../components/Header"; // Correct path: Up two levels
+import { useEffect, useState, useRef } from "react"; // Import useRef here
+import { db } from "../../firebase";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import Header from "../../components/Header";
+
+// ... (rest of your component code - no other changes needed)
 
 export default function NegotiationDetails() {
   const router = useRouter();
