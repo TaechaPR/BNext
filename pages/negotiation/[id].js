@@ -46,7 +46,50 @@ const NegotiationDetails = () => {
         {/* Display the provided content here */}
         <div className="prose lg:prose-xl text-white"> {/* Use 'prose' class for styling */}
           <h2>🚀 M&A in Tech and Big Food Corporations</h2>
-          {/* ... (Rest of your M&A content) ... */}
+          <h3>📌 Mergers & Acquisitions (M&A) in Tech</h3>
+          <p>
+            Tech companies engage in M&A to expand market share, acquire
+            innovation, and eliminate competition. A prime example is Microsoft’s
+            $26.2B acquisition of LinkedIn, strengthening its presence in the
+            professional networking and AI-driven recruitment market. Similarly,
+            Google’s acquisition of Fitbit aimed to dominate the wearable
+            health-tech space.
+          </p>
+          <p>
+            However, tech M&A faces antitrust regulations and data privacy
+            concerns. NVIDIA’s attempted $40B acquisition of ARM was blocked
+            due to fears of market monopolization. Successful tech deals focus on
+            synergy, integration, and regulatory approval.
+          </p>
+
+          <h3>📌 M&A in Big Food Corporations</h3>
+          <p>
+            Food industry M&A is driven by global expansion, cost efficiency, and
+            shifting consumer demands. Nestlé acquired Blue Bottle Coffee to
+            enter the premium coffee market, capitalizing on the specialty coffee
+            trend. Kraft Heinz’s attempted $143B takeover of Unilever reflected
+            the push for global consolidation.
+          </p>
+          <p>
+            Sustainability and health-conscious consumer behavior also shape
+            deals. Companies like Beyond Meat seek partnerships with giants like
+            PepsiCo to scale plant-based alternatives. A successful food M&A
+            depends on brand integration, supply chain efficiency, and consumer
+            alignment.
+          </p>
+
+          <h3>🎯 Key Takeaways</h3>
+          <ul>
+            <li>Tech M&A accelerates innovation but faces regulatory hurdles.</li>
+            <li>
+              Food industry M&A focuses on global reach and evolving consumer
+              trends.
+            </li>
+            <li>
+              Success in both sectors depends on strategic alignment and
+              post-merger integration.
+            </li>
+          </ul>
           <p>Success in both sectors depends on strategic alignment and post-merger integration.</p>
         </div>
       </div>
