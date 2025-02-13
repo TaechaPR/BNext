@@ -12,8 +12,8 @@ export default function Header() {
             whileTap={{ scale: 0.95 }}
             className="flex items-center cursor-pointer"
           >
-            <span className="text-2xl font-bold text-green-500">B2B</span>
-            <span className="text-2xl font-bold text-white">Deals</span>
+            <span className="text-2xl font-bold text-green-500">B-</span>
+            <span className="text-2xl font-bold text-white">Sync</span>
           </motion.div>
         </Link>
 

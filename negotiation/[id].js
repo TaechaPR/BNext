@@ -56,7 +56,12 @@ export default function NegotiationDetails() {
             ))}
           </div>
         </div>
-
+        <Link href={`/negotiation/${negotiation.id}`} passHref>
+  <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="mt-4 inline-block bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 transition-all">
+    View Discussion
+  </motion.a>
+</Link>
+    
         <div className="mt-6 flex gap-4">
           <input
             type="text"

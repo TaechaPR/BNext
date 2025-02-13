@@ -16,12 +16,19 @@ export default function Negotiation() {
   }, []);
 
   const startNegotiation = async () => {
-    await addDoc(collection(db, "negotiations"), {
-      title: "New Business Deal",
-      status: "Pending",
-      created_at: new Date(),
-    });
+    try {
+      const docRef = await addDoc(collection(db, "negotiations"), {
+        title: "New Business Deal",
+        status: "Pending",
+        messages: [],
+        created_at: new Date(),
+      });
+      router.push(`/negotiation/${docRef.id}`); // Redirect to new negotiation page
+    } catch (error) {
+      console.error("Error starting negotiation:", error);
+    }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-green-900 text-white">
