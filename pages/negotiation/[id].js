@@ -1,11 +1,8 @@
-// pages/negotiation/[id].js
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router';
-import { db } from "../../firebase"; // Correct path: Up two levels
-import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
-import Header from "../../components/Header"; // Correct path: Up two levels
-
-// ... (rest of the code - no other changes needed)
+import { db } from "../../firebase";
+import { doc, onSnapshot, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+import Header from "../../components/Header";
 
 export default function NegotiationDetails() {
   const router = useRouter();
@@ -15,32 +12,23 @@ export default function NegotiationDetails() {
   const [messageText, setMessageText] = useState("");
   const messageListRef = useRef(null);
 
-  const staticSenderId = "guestUser"; // Replace with real user ID logic later
+  const staticSenderId = "guestUser"; // Replace with real user authentication
 
   useEffect(() => {
-    async function fetchNegotiation() {
-      if (id) {
-        try {
-          const docRef = doc(db, "negotiations", id);
-          const docSnap = await getDoc(docRef);
-
-          if (docSnap.exists()) {
-            setNegotiation(docSnap.data());
-          } else {
-            console.error("No such document!");
-            router.push('/negotiation');
-          }
-        } catch (error) {
-          console.error("Error fetching negotiation:", error);
-        } finally {
-          setLoading(false);
+    if (id) {
+      const docRef = doc(db, "negotiations", id);
+      const unsubscribe = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setNegotiation(docSnap.data());
+        } else {
+          console.error("No such document!");
+          router.push('/negotiation');
         }
-      } else {
         setLoading(false);
-      }
-    }
+      });
 
-    fetchNegotiation();
+      return () => unsubscribe(); // Cleanup listener on unmount
+    }
   }, [id, router]);
 
   useEffect(() => {
@@ -70,11 +58,11 @@ export default function NegotiationDetails() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-center text-gray-400 mt-10">Loading...</div>;
   }
 
   if (!negotiation) {
-    return <div>Negotiation not found.</div>;
+    return <div className="text-center text-gray-400 mt-10">Negotiation not found.</div>;
   }
 
   return (
@@ -106,6 +94,7 @@ export default function NegotiationDetails() {
               placeholder="Type your message..."
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()} // Send on Enter
             />
             <button
               onClick={sendMessage}
