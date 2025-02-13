@@ -1,11 +1,10 @@
+// pages/negotiation/[id].js
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from 'next/router';
-import { db } from "../../firebase"; // Correct path: Up two levels, then firebase.js
+import { db } from "../../firebase"; // Adjust path as needed
 import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
-import Header from "../../components/Header"; // Correct path: Up two levels, then components/Header.js
-import { useAuth } from '../../../context/AuthContext'; // Correct path: Up three levels, then context/AuthContext.js
+import Header from "../../components/Header"; // Adjust path as needed
 
-// ... (rest of the code)
 export default function NegotiationDetails() {
   const router = useRouter();
   const { id } = router.query;
@@ -13,7 +12,8 @@ export default function NegotiationDetails() {
   const [loading, setLoading] = useState(true);
   const [messageText, setMessageText] = useState("");
   const messageListRef = useRef(null);
-  const { currentUser } = useAuth(); // Access the current user from AuthContext
+
+  const staticSenderId = "guestUser"; // Replace with real user ID logic later
 
   useEffect(() => {
     async function fetchNegotiation() {
@@ -26,7 +26,7 @@ export default function NegotiationDetails() {
             setNegotiation(docSnap.data());
           } else {
             console.error("No such document!");
-            router.push('/negotiation'); // Redirect if negotiation not found
+            router.push('/negotiation');
           }
         } catch (error) {
           console.error("Error fetching negotiation:", error);
@@ -34,26 +34,24 @@ export default function NegotiationDetails() {
           setLoading(false);
         }
       } else {
-        setLoading(false); // Handle case where id is not yet available
+        setLoading(false);
       }
     }
 
     fetchNegotiation();
-  }, [id, router]); // Include router in dependency array
+  }, [id, router]);
 
   useEffect(() => {
-    // Scroll to bottom when messages update
-    if (messageListRef.current && negotiation && negotiation.messages) { // Check if negotiation and messages exist
+    if (messageListRef.current && negotiation && negotiation.messages) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
   }, [negotiation]);
 
-
   const sendMessage = async () => {
-    if (messageText.trim() !== "" && currentUser) { // Check if message is not empty and user is logged in
+    if (messageText.trim() !== "") {
       try {
         const newMessage = {
-          sender: currentUser.uid, // Use currentUser.uid from AuthContext
+          sender: staticSenderId,
           text: messageText.trim(),
           timestamp: serverTimestamp(),
         };
@@ -62,7 +60,7 @@ export default function NegotiationDetails() {
           messages: arrayUnion(newMessage),
         });
 
-        setMessageText(""); // Clear the input field
+        setMessageText("");
       } catch (error) {
         console.error("Error sending message:", error);
       }
@@ -85,12 +83,12 @@ export default function NegotiationDetails() {
           <h1 className="text-4xl font-bold text-center mb-8">{negotiation.title}</h1>
           <p className="text-center text-gray-300 mb-4">Status: {negotiation.status}</p>
 
-          <div className="mb-8 max-h-96 overflow-y-auto p-4 bg-gray-800 rounded" ref={messageListRef}> {/* Added styling and ref */}
+          <div className="mb-8 max-h-96 overflow-y-auto p-4 bg-gray-800 rounded" ref={messageListRef}>
             {negotiation.messages && negotiation.messages.length > 0 ? (
-              <ul className="space-y-2"> {/* Added spacing between messages */}
+              <ul className="space-y-2">
                 {negotiation.messages.map((message, index) => (
-                  <li key={index} className={`p-3 rounded ${message.sender === currentUser?.uid ? 'bg-blue-600 text-white' : 'bg-gray-700'}`}> {/* Improved styling */}
-                    <p className="font-semibold">{message.sender}</p> {/* Display sender's UID (replace with name later) */}
+                  <li key={index} className={`p-3 rounded ${message.sender === staticSenderId ? 'bg-blue-600 text-white' : 'bg-gray-700'}`}>
+                    <p className="font-semibold">{message.sender}</p>
                     <p>{message.text}</p>
                   </li>
                 ))}
@@ -100,9 +98,9 @@ export default function NegotiationDetails() {
             )}
           </div>
 
-          <div className="mt-8 flex"> {/* Flexbox for input and button */}
+          <div className="mt-8 flex">
             <textarea
-              className="flex-grow w-full p-3 bg-gray-900 text-white rounded mr-2 resize-none" // Added resize-none
+              className="flex-grow w-full p-3 bg-gray-900 text-white rounded mr-2 resize-none"
               placeholder="Type your message..."
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
