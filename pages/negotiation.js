@@ -1,38 +1,39 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore"; // Removed addDoc and serverTimestamp
+import { collection, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
 import Header from "../components/Header";
 
 export default function NegotiationList() {
-  const [negotiations, setNegotiations] = useState();
+  const [negotiations, setNegotiations] = useState([]);
   const router = useRouter();
-  const [showModal, setShowModal] = useState(false); // State for the modal
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     async function fetchNegotiations() {
-      const querySnapshot = await getDocs(collection(db, "negotiations"));
-      setNegotiations(querySnapshot.docs.map(doc => ({ id: doc.id,...doc.data() })));
+      try {
+        const querySnapshot = await getDocs(collection(db, "negotiations"));
+        setNegotiations(
+          querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+        );
+      } catch (error) {
+        console.error("Error fetching negotiations:", error);
+      }
     }
     fetchNegotiations();
-  },);
+  }, []);
 
   const handleNewNegotiationClick = () => {
-    setShowModal(true); // Show the modal
+    setShowModal(true);
   };
 
   const closeModal = () => {
-    setShowModal(false); // Hide the modal
+    setShowModal(false);
   };
 
   const handleCreateNegotiation = () => {
-    // In a real application, you would add the new negotiation to Firestore here.
-    // For this mockup, we'll just log a message and close the modal.
-    console.log("Creating new negotiation (mockup)");
+    console.log("Creating new negotiation (mockup)"); // Mockup message
     closeModal();
-
-    // After successful creation, you would typically redirect:
-    // router.push(`/negotiation/${newNegotiationId}`);
   };
 
   return (
@@ -42,17 +43,19 @@ export default function NegotiationList() {
         <h1 className="text-4xl font-bold text-center mb-8">Negotiations</h1>
 
         <button
-          onClick={handleNewNegotiationClick} // Call the function to show modal
+          onClick={handleNewNegotiationClick}
           className="block mx-auto bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-all"
         >
           Start New Negotiation
         </button>
 
-        {/* The Modal */}
+        {/* Modal */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-gray-800 rounded-lg p-8">
-              <h2 className="text-2xl font-bold mb-4 text-white">New Negotiation</h2>
+              <h2 className="text-2xl font-bold mb-4 text-white">
+                New Negotiation
+              </h2>
               <p className="text-gray-400 mb-6">
                 This is a mockup. Creating a new negotiation is not yet
                 implemented.
@@ -76,11 +79,11 @@ export default function NegotiationList() {
         )}
 
         <div className="mt-8">
-          {negotiations.length === 0? (
+          {negotiations?.length === 0 ? (
             <p className="text-center text-gray-400">No negotiations yet.</p>
-          ): (
+          ) : (
             <ul className="space-y-4">
-              {negotiations.map((negotiation) => (
+              {negotiations?.map((negotiation) => (
                 <li key={negotiation.id} className="p-4 bg-gray-800 rounded">
                   <h2 className="text-2xl font-bold text-green-400">
                     {negotiation.title}
