@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export default function Header() {
   return (
-    <header className="bg-black bg-opacity-70 backdrop-blur-md fixed w-full z-50 shadow-lg">
+    <header className="bg-black bg-opacity-70 backdrop-blur-md sticky top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="no-underline">
