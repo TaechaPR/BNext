@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 
 export default function Negotiation() {
   const [negotiations, setNegotiations] = useState([]);
+  const [newNegotiationTitle, setNewNegotiationTitle] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -20,15 +21,15 @@ export default function Negotiation() {
   const startNegotiation = async () => {
     try {
       const docRef = await addDoc(collection(db, "negotiations"), {
-        title: "New Business Deal", // You can make this dynamic later
+        title: newNegotiationTitle || "New Business Deal",
         status: "Pending",
-        messages: [], // Initialize with an empty array of messages
+        messages: [],
         created_at: new Date(),
       });
+      setNewNegotiationTitle("");
       router.push(`/negotiation/${docRef.id}`);
     } catch (error) {
       console.error("Error starting negotiation:", error);
-      // Handle the error (e.g., display an error message to the user)
     }
   };
 
@@ -39,6 +40,17 @@ export default function Negotiation() {
         <div className="max-w-6xl mx-auto py-12 px-6">
           <h1 className="text-4xl font-bold text-center mb-8">Negotiations</h1>
           <p className="text-center text-gray-300 mb-10">Manage your business deals and discussions.</p>
+
+          <div className="mb-6">
+            <input
+              type="text"
+              value={newNegotiationTitle}
+              onChange={(e) => setNewNegotiationTitle(e.target.value)}
+              placeholder="Enter negotiation title"
+              className="w-full p-3 bg-gray-900 text-white rounded"
+            />
+          </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {negotiations.length === 0 ? (
               <p className="text-center col-span-3">No negotiations found.</p>
