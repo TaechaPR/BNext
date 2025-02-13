@@ -1,7 +1,14 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useState } from "react"; // Import useState
 
 export default function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for menu visibility
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
     <header className="bg-black bg-opacity-70 backdrop-blur-md sticky top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -17,8 +24,9 @@ export default function Header() {
           </motion.div>
         </Link>
 
-        {/* Navigation Links */}
+        {/* Navigation Links (Desktop) */}
         <nav className="hidden md:flex space-x-8">
+          {/* ... (Your existing desktop navigation links) */}
           <Link href="/marketplace" className="no-underline">
             <motion.span
               whileHover={{ scale: 1.05 }}
@@ -37,7 +45,7 @@ export default function Header() {
               Education
             </motion.span>
           </Link>
-          <Link href="/negotiation" className="no-underline">
+           <Link href="/negotiation" className="no-underline">
             <motion.span
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -46,7 +54,7 @@ export default function Header() {
               Negotiation
             </motion.span>
           </Link>
-          <Link href="/register" className="no-underline">
+           <Link href="/register" className="no-underline">
             <motion.span
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -58,7 +66,10 @@ export default function Header() {
         </nav>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden text-gray-300 hover:text-green-500 focus:outline-none">
+        <button
+          className="md:hidden text-gray-300 hover:text-green-500 focus:outline-none"
+          onClick={toggleMobileMenu} // Add onClick handler
+        >
           <svg
             className="w-6 h-6"
             fill="none"
@@ -74,6 +85,36 @@ export default function Header() {
             />
           </svg>
         </button>
+
+        {/* Mobile Menu */}
+        <div
+          className={`${
+            isMobileMenuOpen ? "block" : "hidden" // Toggle visibility
+          } md:hidden absolute top-full left-0 w-full bg-black bg-opacity-70 backdrop-blur-md z-40`} // Style and position
+        >
+          <nav className="flex flex-col space-y-4 px-6 py-4"> {/* Vertical menu */}
+            <Link href="/marketplace" className="no-underline" onClick={toggleMobileMenu}> {/* Close menu on link click */}
+              <span className="text-gray-300 hover:text-green-500 transition-all cursor-pointer">
+                Marketplace
+              </span>
+            </Link>
+            <Link href="/education" className="no-underline" onClick={toggleMobileMenu}>
+              <span className="text-gray-300 hover:text-green-500 transition-all cursor-pointer">
+                Education
+              </span>
+            </Link>
+            <Link href="/negotiation" className="no-underline" onClick={toggleMobileMenu}>
+              <span className="text-gray-300 hover:text-green-500 transition-all cursor-pointer">
+                Negotiation
+              </span>
+            </Link>
+            <Link href="/register" className="no-underline" onClick={toggleMobileMenu}>
+              <span className="text-gray-300 hover:text-green-500 transition-all cursor-pointer">
+                About Us
+              </span>
+            </Link>
+          </nav>
+        </div>
       </div>
     </header>
   );
