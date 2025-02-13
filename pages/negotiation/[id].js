@@ -1,85 +1,56 @@
-// pages/negotiation/[id].js
-import { useRouter } from "next/router";
-import { useEffect, useState, useRef } from "react";
-import { db } from "../../firebase"; // Correct path: Up two levels
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
-import Header from "../../components/Header"; // Correct path: Up two levels
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase'; // Import your Firebase config
 
-export default function NegotiationDetails() {
+const NegotiationDetails = () => {
   const router = useRouter();
   const { id } = router.query;
   const [negotiation, setNegotiation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const messageListRef = useRef(null);
-
-  const staticSenderId = "guestUser"; // Replace with real user ID logic later
 
   useEffect(() => {
-    let unsubscribe;
+    const fetchNegotiation = async () => {
+      if (id) {
+        const docRef = doc(db, 'negotiations', id);
+        const docSnap = await getDoc(docRef);
 
-    if (id) {
-      const docRef = doc(db, "negotiations", id);
-
-      async function fetchInitialData() {
-        try {
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setNegotiation(docSnap.data());
-          } else {
-            console.error("No such document!");
-            router.push('/negotiation');
-            return;
-          }
-        } catch (error) {
-          console.error("Error fetching initial data:", error);
-        } finally {
-          setLoading(false);
+        if (docSnap.exists()) {
+          setNegotiation(docSnap.data());
+        } else {
+          // Handle case where document doesn't exist
+          console.log('No such document!');
+          setNegotiation(null); // Or redirect, show an error, etc.
         }
-      }
-
-      fetchInitialData();
-
-      unsubscribe = onSnapshot(docRef, (updatedDocSnap) => {
-        if (updatedDocSnap.exists()) {
-          setNegotiation(updatedDocSnap.data());
-        }
-      });
-    }
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
       }
     };
-  }, [id, router]);
 
-  useEffect(() => {
-    if (messageListRef.current && negotiation && negotiation.messages) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-    }
-  }, [negotiation]);
-
-
-  if (loading) {
-    return <p className="text-center text-gray-400 mt-10">Loading...</p>;
-  }
+    fetchNegotiation();
+  }, [id]);
 
   if (!negotiation) {
-    return <p className="text-center text-gray-400 mt-10">Negotiation not found.</p>;
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-black to-green-900 text-white flex items-center justify-center">
+        <p className="text-2xl text-gray-400">Loading...</p> {/* Or a better loading indicator */}
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-green-900 text-white">
-      <Header />
-      <div className="max-w-5xl mx-auto py-12 px-6 pt-24">
-        <h1 className="text-4xl font-bold text-green-400">{negotiation.title}</h1>
-        <p className="text-gray-300 mt-2">Status: {negotiation.status}</p>
+      <Header /> {/* Assuming you have a Header component */}
+      <div className="max-w-6xl mx-auto py-12 px-6">
+        <h1 className="text-4xl font-bold text-center mb-8">{negotiation.title}</h1>
+        <p className="text-xl mb-4">Status: {negotiation.status}</p>
 
-        {/* Display the content instead of messages */}
-        <div className="mt-6 text-lg text-gray-200">
-          {negotiation.content} {/* Assuming your data has a 'content' field */}
+        {/* Display the provided content here */}
+        <div className="prose lg:prose-xl text-white"> {/* Use 'prose' class for styling */}
+          <h2>🚀 M&A in Tech and Big Food Corporations</h2>
+          {/* ... (Rest of your M&A content) ... */}
+          <p>Success in both sectors depends on strategic alignment and post-merger integration.</p>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default NegotiationDetails;
