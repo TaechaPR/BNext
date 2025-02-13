@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
-import Header from "../components/Header";
+import Header from "../../components/Header";
 import { motion } from "framer-motion";
 
 export default function ProjectDetails() {
