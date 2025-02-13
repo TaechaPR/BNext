@@ -7,16 +7,22 @@ import Header from "../components/Header";
 
 export default function Education() {
   const [articles, setArticles] = useState([]);
-  const [videos, setVideos] = useState([ // State for YouTube video URLs
+  const videos = [
     "https://www.youtube.com/watch?v=FGBEfmOvdKk",
     "https://www.youtube.com/watch?v=gwJ-hS2QcvA",
     "https://www.youtube.com/watch?v=rz5jF12guyY",
-  ]);
+  ];
 
   useEffect(() => {
     async function fetchArticles() {
-      const querySnapshot = await getDocs(collection(db, "education"));
-      setArticles(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      try {
+        const querySnapshot = await getDocs(collection(db, "education"));
+        setArticles(
+          querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+        );
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      }
     }
     fetchArticles();
   }, []);
@@ -33,8 +39,8 @@ export default function Education() {
         </p>
 
         {/* Articles Section */}
-        <h2 className="text-3xl font-semibold mb-4">Articles</h2> {/* Section Heading */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"> {/* Added margin-bottom */}
+        <h2 className="text-3xl font-semibold mb-4">Articles</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {articles.length === 0 ? (
             <p className="text-center col-span-3">No articles available.</p>
           ) : (
@@ -64,22 +70,22 @@ export default function Education() {
         </div>
 
         {/* YouTube Videos Section */}
-        <h2 className="text-3xl font-semibold mb-4">YouTube Videos</h2> {/* Section Heading */}
+        <h2 className="text-3xl font-semibold mb-4">YouTube Videos</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {videos.map((videoUrl, index) => (
             <motion.div
-              key={index} // Use index as key for now (if videos are static)
+              key={index}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-gray-900 p-6 rounded-lg shadow-lg"
             >
               <iframe
-                src={videoUrl} // Embed the video using an iframe
+                src={videoUrl}
                 title="YouTube video player"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                className="w-full h-48" // Adjust height as needed
+                className="w-full h-48"
               ></iframe>
             </motion.div>
           ))}
