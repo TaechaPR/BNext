@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore";
 import Header from "../../components/Header";
 import { motion } from "framer-motion";
 
@@ -13,16 +13,16 @@ export default function NegotiationDetails() {
 
   useEffect(() => {
     if (id) {
-      async function fetchNegotiation() {
-        const docRef = doc(db, "negotiations", id);
-        const docSnap = await getDoc(docRef);
+      const docRef = doc(db, "negotiations", id);
+      const unsubscribe = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
           setNegotiation(docSnap.data());
         } else {
           setNegotiation(null);
         }
-      }
-      fetchNegotiation();
+      });
+
+      return () => unsubscribe(); // Clean up listener on unmount
     }
   }, [id]);
 
@@ -30,7 +30,7 @@ export default function NegotiationDetails() {
     if (!message.trim()) return;
     const docRef = doc(db, "negotiations", id);
     await updateDoc(docRef, {
-      messages: arrayUnion({ sender: "You", message }),
+      messages: arrayUnion({ sender: "You", message, timestamp: new Date() }),
     });
     setMessage("");
   };
@@ -40,7 +40,7 @@ export default function NegotiationDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-green-900 text-white">
+    <div className="min-h-screen bg-gradient-to-b from-black to-green-900 text-white pt-24">
       <Header />
       <div className="max-w-5xl mx-auto py-12 px-6">
         <h1 className="text-4xl font-bold text-green-400">{negotiation.title}</h1>
@@ -48,20 +48,19 @@ export default function NegotiationDetails() {
 
         <div className="mt-6 bg-gray-800 p-4 rounded-lg">
           <h2 className="text-2xl font-bold">Messages</h2>
-          <div className="mt-4 space-y-2">
-            {negotiation.messages?.map((msg, index) => (
-              <p key={index} className="text-gray-200">
-                <strong>{msg.sender}:</strong> {msg.message}
-              </p>
-            ))}
+          <div className="mt-4 space-y-2 max-h-60 overflow-y-auto">
+            {negotiation.messages?.length > 0 ? (
+              negotiation.messages.map((msg, index) => (
+                <p key={index} className="text-gray-200">
+                  <strong>{msg.sender}:</strong> {msg.message}
+                </p>
+              ))
+            ) : (
+              <p className="text-gray-500">No messages yet.</p>
+            )}
           </div>
         </div>
-        <Link href={`/negotiation/${negotiation.id}`} passHref>
-  <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="mt-4 inline-block bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 transition-all">
-    View Discussion
-  </motion.a>
-</Link>
-    
+
         <div className="mt-6 flex gap-4">
           <input
             type="text"
@@ -69,6 +68,7 @@ export default function NegotiationDetails() {
             className="flex-1 p-3 bg-gray-700 text-white rounded"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()} // Send message on Enter
           />
           <motion.button
             whileHover={{ scale: 1.05 }}
